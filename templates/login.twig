@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="/css/style.css" rel='stylesheet' type='text/css'/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="application/x-javascript"> addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        } </script>
+</head>
+<body>
+<div class="main">
+
+    <div class="header">
+        <h1>登录、注册</h1>
+    </div>
+    <p></p>
+    <ul class="left-form">
+        <li class="pass1-li">
+            <input type="text" name="username" placeholder="用户名" required/>
+            <div class="clear"></div>
+            <div class="tips" style="display: none">不能为空</div>
+        </li>
+        <li class="pass2-li">
+            <input type="password" name="password" placeholder="密码" required/>
+            <div class="clear"></div>
+            <div class="tips" style="display: none">不能为空</div>
+        </li>
+        <input type="submit" id="login" value="登录"/>
+        <input type="submit" id="register" value="注册"/>
+        <div class="clear"></div>
+    </ul>
+    <div class="clear"></div>
+</div>
+</body>
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/jquery.cookie/jquery.cookie.js"></script>
+<script src="/vendor/jquery-validation/jquery.validate.min.js"></script>
+<script src="/vendor/jquery/jquery.form.js"></script>
+<script>
+    window.open_url = '{{ redirect_uri|raw }}';
+    window.is_company = '{{ is_company }}' == 1;
+    window.CORE = {};
+    window.client_id = '{{ client_id }}';
+    window.state = '{{ state }}';
+    window.domain = '{{ app.getParameter('app.token_iss') }}'
+    $(function () {
+        var _setCookie = function _setCookie(res) {
+            var expires = void 0;
+            if (res.refresh_token) {
+                expires = res.refresh_token_expire_in / 3600;
+                $.cookie('ly-refresh-token', res.refresh_token, {domain: window.domain, expires: expires, path: "/"});
+            }
+            $.cookie('ly-token-expire', Date.now() + res.expire_in * 1000, {domain: window.domain, path: "/"});
+            $.cookie('ly-token-update', Date.now(), {domain: window.domain, path: "/"});
+            $.cookie('ly-token', res.access_token, {domain: window.domain, path: "/"});
+            return res;
+        };
+        var object = {
+            url: "/oauth/auth",
+            type: "post",
+            success: function (data) {
+                _setCookie(data)
+                window.location.href = window.open_url
+            },
+            error: function (error) { //提交失败执行的函数
+                console.log(error.responseJSON)
+            },
+            beforeSubmit: function () {
+            },
+            dataType: "json",
+            restForm: true,
+            timeout: 6000
+        }
+
+        $("#login").click(function () {
+            if (!$("input[name='username']").val() || !$("input[name='password']").val()) {
+                $(".tips").show()
+                return
+            }
+            object.data = {
+                username: $("input[name='username']").val(),
+                password: $("input[name='password']").val(),
+                type: "login"
+            }
+            $.ajax(object)
+        })
+        $("#register").click(function () {
+            if (!$("input[name='username']").val() || !$("input[name='password']").val()) {
+                $(".tips").show()
+                return
+            }
+            object.data = {
+                username: $("input[name='username']").val(),
+                password: $("input[name='password']").val(),
+                type: "register"
+            }
+            $.ajax(object)
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,35 @@
+oauth.authorize:
+    path: authorize
+    methods: [GET, POST]
+    defaults:
+        _controller: OAuth\OAuthController::authorizeAction
+oauth.token:
+    path: token
+    methods: [POST, OPTIONS]
+    defaults:
+        _controller: OAuth\OAuthController::tokenAction
+        type: api
+oauth.auth:
+    path: auth
+    methods: [POST, OPTIONS]
+    defaults:
+        _controller: OAuth\TokenController::authenticateAction
+        type: api
+oauth.login:
+    prefix: /login
+    resource: "oauth/login.yml"
+oauth.logout:
+    prefix: /logout
+    resource: "oauth/logout.yml"
+oauth.server:
+    path: server/me
+    methods: [GET]
+    defaults:
+        _controller: LianYun\Passport\Controllers\ServerApi\TokenController::meAction
+        type: api
+
+oauth.test:
+    path: test
+    methods: [GET,POST]
+    defaults:
+        _controller: OAuth\TestController::testAction

@@ -1,0 +1,18 @@
+{
+    "require" : {
+        "php"                                      : ">=7.2",
+        "guzzlehttp/guzzle"                        : "^6.3",
+        "doctrine/orm"                             : "^2.6",
+        "amopi/mopi"                               : "^2.4",
+        "lcobucci/jwt"                             : "^3.2",
+        "amopi/doctrine-addon": "^2.1",
+        "league/uri": "^5.3",
+        "symfony/validator": "^4.2"
+    },
+    "name"    : "lianyun/passport",
+    "autoload": {
+        "psr-4": {
+            "LianYun\\Passport\\": "src/"
+        }
+    }
+}

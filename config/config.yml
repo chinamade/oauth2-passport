@@ -1,0 +1,22 @@
+is_debug: true
+secret: ErdsRzfvt6
+token_url: http://oauth.passprot.com/oauth/token
+token_lifetime: 43200
+external_token_lifetime: 3600
+refresh_token_lifetime: 604800
+token_iss: .passport.com
+dir:
+    log: ./logs
+    data: ./data
+    cache: ./cache
+    template: ./templates
+db:
+    host: 10.1.5.91
+    port: 3306
+    user: myuser
+    password: 123456
+    dbname: passport
+    prefix: passport_
+subdomains:
+    oauth: oauth-test
+    server: server

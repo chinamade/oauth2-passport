@@ -1,0 +1,12 @@
+oauth.login.index:
+    path: /{action}
+    defaults:
+        _controller: Oauth\LoginController::indexAction
+        action: 'index'
+    requirements:
+        action: (index)?
+
+oauth.login.check:
+    path: check
+    defaults:
+        _controller: Oauth\LoginController::checkAction

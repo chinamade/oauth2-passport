@@ -1,0 +1,19 @@
+server:
+    host: "{subdomain}"
+    resource: routes/server.yml
+    requirements:
+       subdomain:  ^(api-server).passport.com?$
+    defaults:
+        subdomain: "%app.subdomains.server%"
+oauth:
+    prefix: /oauth
+    host: "{subdomain}.passport.com"
+    resource: "routes/oauth.yml"
+    requirements:
+        subdomain: ^oauth(-test|-dev)?$
+    defaults:
+        subdomain: "%app.subdomains.oauth%"
+home:
+    path: /
+    defaults:
+        _controller: LianYun\Passport\Controllers\DemoController::testAction

@@ -1,0 +1,6 @@
+oauth.logout.index:
+    path: /{action}
+    methods: "GET"
+    defaults: { _controller: Oauth\LogoutController::indexAction, action: 'index' }
+    requirements:
+        action: (index)?

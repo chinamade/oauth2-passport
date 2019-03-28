@@ -1,0 +1,97 @@
+imports:
+    - { resource: "app.config.yml" }
+parameters:
+    default.namespace:
+    - Amopi\Mlib\
+    - LianYun\Passport\
+services:
+    app:
+        properties:
+            logging:
+                path: '%app.dir.log%'
+                level: info
+            cli:
+                name: api
+                version: '0.1'
+            http:
+                providers:
+                - "@validator"
+                cache_dir: '%app.dir.cache%'
+                routing:
+                    path: '%app.dir.config%/routes.yml'
+                    namespaces:
+                    - LianYun\Passport\
+                    - LianYun\Passport\Controllers\
+                twig:
+                    template_dir: '%app.dir.template%'
+                    globals:
+                        app: '@app'
+                injected_args:
+                - '@em'
+                - "@company_helper"
+                - "@security.token.generator"
+                security:
+                    policies:
+                        core: "@security.policy.core"
+                        oauth.token: "@security.policy.oauth_token"
+                    firewalls:
+                        oauth.token:
+                            pattern: ^(/oauth/token)
+                            policies:
+                                oauth.token: true
+                            users: '@security.user_provider.oauth_token'
+                        oauth.login.check:
+                            pattern: ^/oauth/login/check
+                            policies:
+                                core: true
+                                anonymous: true
+                            stateless: true
+                            users:  "@security.user_provider.signed_request"
+                view_handlers: "@handler.view"
+                error_handlers: "@handler.error"
+                middlewares:
+                - "@middleware.access_decider"
+    em:
+        class: Doctrine\ORM\EntityManager
+        factory:
+        - LianYun\Passport\Database\ApiDatabase
+        - getEntityManager
+    db.connection:
+        class: Doctrine\DBAL\Connection
+        factory:
+        - LianYun\Passport\Database\ApiDatabase
+        - getDatabaseConnection
+    company_helper:
+        class: LianYun\Passport\Commons\CompanyHelper
+        arguments:
+        - '@app'
+    handler.view:
+        class: LianYun\Passport\Middlewares\FallbackViewHandler
+        arguments:
+        - '@app'
+    handler.error:
+        class: LianYun\Passport\Middlewares\ExceptionHandler
+    middleware.sender_injector:
+        class: LianYun\Passport\Middlewares\SenderInjectorMiddleware
+    middleware.access_decider:
+        class: LianYun\Passport\Middlewares\AccessDecisionMiddleware
+    security.token.generator:
+        class: LianYun\Passport\Security\OAuthAccessTokenGenerator
+        arguments:
+        - '%app.secret%'
+    security.policy.core:
+        class: LianYun\Passport\Security\SignedRequestPolicy
+    security.policy.oauth_token:
+        class: LianYun\Passport\Security\OAuthTokenRequestPolicy
+    security.user_provider.oauth_token:
+        class: LianYun\Passport\Security\OAuthTokenRequestSenderProvider
+        arguments:
+        - '%app.secret%'
+        - '@em'
+    security.user_provider.signed_request:
+        class: LianYun\Passport\Security\SignedRequestSenderProvider
+        arguments:
+        - '%app.secret%'
+        - '@em'
+    validator:
+        class: Silex\Provider\ValidatorServiceProvider

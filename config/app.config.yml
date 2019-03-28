@@ -1,0 +1,10 @@
+parameters:
+    app_config:
+        1:
+            appid: 1
+            secret: ErdsRzfvt6
+            redirect_uri: http://oauth-test.passport.com/oauth/test
+        888:
+            appid: 888
+            secret: abc3df
+            redirect_uri: http://oauth-test.passport.com/oauth/test

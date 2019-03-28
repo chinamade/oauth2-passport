@@ -1,0 +1,20 @@
+server.tokenMe:
+    path: /me
+    methods: ["POST","GET"]
+    defaults:
+        _controller: LianYun\Passport\Controllers\ServerApi\TokenController::meAction
+server.paycallback:
+    path: /pay/callback
+    methods: ["POST","GET"]
+    defaults:
+        _controller: LianYun\Passport\Controllers\ServerApi\PayController::callbackAction
+server.twittercallback:
+    path: /twitter/callback
+    methods: ["POST","GET"]
+    defaults:
+        _controller: LianYun\Passport\Controllers\ServerApi\CallbackController::twitterCallback
+server.test:
+    path: /test
+    methods: ["POST","GET"]
+    defaults:
+        _controller: LianYun\Passport\Controllers\ServerApi\TestController::test
